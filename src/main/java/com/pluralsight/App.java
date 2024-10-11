@@ -13,12 +13,26 @@ public class App {
         Scanner keyboard = new Scanner(System.in);
 
         HashMap<String,Product> inventory = getinventory();
-        displayProducts(inventory,keyboard);
+        ArrayList<Product> cart = cart();
+        while (true){
+            displayCommands();
+            int command = Integer.parseInt(keyboard.nextLine());
+            switch (command){
+                case 1:
+                    displayProducts(inventory,keyboard,cart);
+                    break;
+                case 2:
+                    displayCart(cart,keyboard);
+                    break;
+                case 3:
+                    System.exit(0);
 
+            }
+        }
 
 
     }
-    public static void displayProducts(HashMap<String,Product> inventory,Scanner keyboard){
+    public static void displayProducts(HashMap<String,Product> inventory,Scanner keyboard,ArrayList<Product> cart){
 
         for ( String k: inventory.keySet()) {
             Product product = inventory.get(k);
@@ -42,7 +56,7 @@ public class App {
                 System.out.println("Please enter product name or department: ");
                 String userSearch = keyboard.nextLine();
                 for (Product product : inventory.values()) {
-                    if (!userSearch.equalsIgnoreCase(product.getProductName())&& !userSearch.equalsIgnoreCase(product.getDepartment())) {
+                    if (!userSearch.equalsIgnoreCase(product.getProductName()) && !userSearch.equalsIgnoreCase(product.getDepartment())) {
                         continue;
                     }
 
@@ -50,14 +64,53 @@ public class App {
                         System.out.println("Name: " + product.getProductName());
                         System.out.println("Price: $" + product.getPrice());
                         System.out.println("Department: " + product.getDepartment());
+                    } else {
+                        System.out.println("Product not found");
                     }
-                    else{
-                            System.out.println("product not found");
+                }
+                break;
+            case 2:
+                int count =0;
+
+                while (true) {
+                    System.out.println("please enter product to add to cart: ");
+                    String userCart = keyboard.nextLine();
+                    for (Product product : inventory.values()) {
+                        if (!userCart.equalsIgnoreCase(product.getProductName())) {
+                            continue;
                         }
+                        if (userCart.equalsIgnoreCase(product.getProductName())) {
+                            cart.add(new Product(product.getSku(), product.getProductName(), product.getPrice(), product.getDepartment()));
+                            System.out.println("the added item is: " + cart.get(count++).getProductName());
+                            System.out.println("product added to cart successfully");
+
+                        }
+
                     }
+                    System.out.println("Do you want to add another product (Y or N)? ");
+                    String addAnother = keyboard.nextLine();
+                    if(addAnother.equalsIgnoreCase("y")){
+                        continue;
+
+                    } else if(addAnother.equalsIgnoreCase("N")) {
+                        return;
+                    }
+                    }
+            case 3:
+                return;
 
                 }
         }
+
+
+
+    public static void displayCart (ArrayList<Product> cart, Scanner keyboard){
+        for (Product product : cart){
+        System.out.println(product.getProductName());
+        System.out.println("$"+ product.getPrice());
+        System.out.println(product.getDepartment());
+    }
+    }
 
 
 
@@ -98,6 +151,11 @@ public class App {
             2 - Display Cart            
             3 - Quit                        
             Enter your command: """);
+    }
+
+    public static ArrayList<Product> cart (){
+        ArrayList<Product> cart = new ArrayList<>();
+        return cart;
     }
 
 
